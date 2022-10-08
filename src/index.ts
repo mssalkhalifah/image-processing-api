@@ -1,5 +1,15 @@
-function returnsHelloWorld(): string {
-  return 'Hello World';
-}
+import * as dotenv from 'dotenv';
+import express from 'express';
 
-export default returnsHelloWorld;
+dotenv.config();
+
+const app = express();
+
+app.get('/', (req, res) => {
+  res.send('Hello World');
+});
+
+app.listen(process.env.PORT, () => {
+  // eslint-disable-next-line no-console
+  console.log(`server started at http://localhost:${process.env.PORT}`);
+});
