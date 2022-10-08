@@ -1,3 +1,5 @@
-const stringVar = 'Hello World';
+function returnsHelloWorld(): string {
+  return 'Hello World';
+}
 
-console.log(stringVar);
+export default returnsHelloWorld;
