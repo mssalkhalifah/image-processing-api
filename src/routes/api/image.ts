@@ -1,6 +1,6 @@
 import express from 'express';
 import path from 'path';
-// import * as fs from 'fs';
+import fs from 'fs';
 
 type QueryParams = {
   filename: string;
@@ -18,7 +18,16 @@ router.get(
       'images',
       req.query.filename.concat('.jpg'),
     );
-    res.status(200).sendFile(url);
+
+    try {
+      if (fs.existsSync(url)) {
+        res.status(200).sendFile(url);
+      } else {
+        res.sendStatus(404);
+      }
+    } catch (err) {
+      res.sendStatus(500);
+    }
   },
 );
 
