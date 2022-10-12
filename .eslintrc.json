@@ -26,5 +26,10 @@
         "propertyDeclaration": true
       }
     ]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["src/**/*.ts"]
+    }
+  ]
 }
