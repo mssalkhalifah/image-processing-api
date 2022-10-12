@@ -15,7 +15,7 @@ router.get(
   '/image',
   async (req: express.Request<{}, {}, {}, QueryParams>, res): Promise<void> => {
     if (!req.query.filename) {
-      res.sendStatus(400);
+      res.status(400).send({ message: 'Must atleast include a filename' });
     } else {
       const url = path.join(
         global.publicRoot,
@@ -23,43 +23,52 @@ router.get(
         req.query.filename.concat('.jpg'),
       );
 
-      if (req.query.width || req.query.height) {
-        const imageBuffer = new Uint8Array(
-          (await sharp(url).toBuffer()).buffer,
-        );
-        const imageMetadata = sharp(imageBuffer).metadata();
+      try {
+        if (req.query.width || req.query.height) {
+          sharp(url)
+            .metadata()
+            .then((metadata): void => {
+              let imageWidth: number = metadata.width!;
+              let imageHeight: number = metadata.height!;
 
-        const imageWidth: number = req.query.width
-          ? parseInt(req.query.width, 10)
-          : (await imageMetadata).width!;
-        const imageHeight: number = req.query.height
-          ? parseInt(req.query.height, 10)
-          : (await imageMetadata).height!;
+              if (req.query.width) {
+                imageWidth = parseInt(req.query.width, 10);
+              }
 
-        const newFilename = req.query.filename.concat(
-          imageWidth.toString(),
-          imageHeight.toString(),
-          '.jpg',
-        );
+              if (req.query.height) {
+                imageHeight = parseInt(req.query.height, 10);
+              }
 
-        const filepath = path.resolve(global.publicRoot, 'thumb', newFilename);
+              const newFilename = req.query.filename.concat(
+                imageWidth.toString(),
+                imageHeight.toString(),
+                '.jpg',
+              );
 
-        sharp(imageBuffer)
-          .resize(imageWidth, imageHeight)
-          .toFile(filepath)
-          .then((): void => {
-            res.status(200).sendFile(filepath);
-          });
-      } else {
-        try {
-          if (fs.existsSync(url)) {
-            res.status(200).sendFile(url);
-          } else {
-            res.sendStatus(404);
-          }
-        } catch (err) {
-          res.sendStatus(500);
+              const filepath = path.resolve(
+                global.publicRoot,
+                'thumb',
+                newFilename,
+              );
+
+              if (fs.existsSync(filepath)) {
+                res.status(200).sendFile(filepath);
+              } else {
+                sharp(url)
+                  .resize(imageWidth, imageHeight)
+                  .toFile(filepath)
+                  .then((): void => {
+                    res.status(200).sendFile(filepath);
+                  });
+              }
+            });
+        } else if (fs.existsSync(url)) {
+          res.status(200).sendFile(url);
+        } else {
+          res.sendStatus(404);
         }
+      } catch (error) {
+        res.sendStatus(500);
       }
     }
   },
