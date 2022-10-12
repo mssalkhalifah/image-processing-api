@@ -1,9 +1,7 @@
-import * as dotenv from 'dotenv';
 import express from 'express';
 import path from 'path';
 import * as imagesRoute from './routes/api/image';
 
-dotenv.config();
 global.publicRoot = path.resolve(__dirname, '..', 'public');
 
 const port = 5555;

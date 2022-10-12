@@ -25,7 +25,8 @@
         "parameter": true,
         "propertyDeclaration": true
       }
-    ]
+    ],
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": true}]
   },
   "overrides": [
     {
