@@ -16,6 +16,15 @@
     "@typescript-eslint/explicit-function-return-type": [
       "error",
       { "allowTypedFunctionExpressions": false }
+    ],
+    "@typescript-eslint/typedef": [
+      "error",
+      {
+        "arrowParameter": true,
+        "memberVariableDeclaration": true,
+        "parameter": true,
+        "propertyDeclaration": true
+      }
     ]
   }
 }

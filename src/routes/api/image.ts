@@ -13,7 +13,10 @@ const router = express.Router();
 
 router.get(
   '/image',
-  async (req: express.Request<{}, {}, {}, QueryParams>, res): Promise<void> => {
+  async (
+    req: express.Request<{}, {}, {}, QueryParams>,
+    res: express.Response,
+  ): Promise<void> => {
     if (!req.query.filename) {
       res.status(400).send({ message: 'Must atleast include a filename' });
     } else {
@@ -27,7 +30,7 @@ router.get(
         if (req.query.width || req.query.height) {
           sharp(url)
             .metadata()
-            .then((metadata): void => {
+            .then((metadata: sharp.Metadata): void => {
               let imageWidth: number = metadata.width!;
               let imageHeight: number = metadata.height!;
 

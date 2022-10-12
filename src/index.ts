@@ -11,7 +11,7 @@ const app = express();
 
 app.use('/api', imagesRoute.default);
 
-app.get('/', (req, res): void => {
+app.get('/', (req: express.Request, res: express.Response): void => {
   res.send('Hello World');
 });
 

@@ -73,7 +73,7 @@ describe('GET /api/image', (): void => {
         `${filename}${width}${height}.jpg`,
       );
 
-      fs.unlink(filePath, (error): void => {
+      fs.unlink(filePath, (error: NodeJS.ErrnoException | null): void => {
         if (error) {
           throw error;
         }
