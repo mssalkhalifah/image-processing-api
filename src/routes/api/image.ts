@@ -51,6 +51,10 @@ router.get(
                 newFilename,
               );
 
+              if (!fs.existsSync(path.resolve(global.publicRoot, 'thumb'))) {
+                fs.mkdirSync(path.resolve(global.publicRoot, 'thumb'));
+              }
+
               if (fs.existsSync(filepath)) {
                 res.status(200).sendFile(filepath);
               } else {
