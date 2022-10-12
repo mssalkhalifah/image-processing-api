@@ -8,7 +8,7 @@
     "lint": "eslint ./src --ext .ts",
     "jasmine": "jasmine",
     "test": "npm run lint && npm run build && npm run jasmine",
-    "start": "npm run build && nodemon src"
+    "start": "npm test && nodemon src"
   },
   "repository": {
     "type": "git",
