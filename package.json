@@ -6,9 +6,10 @@
   "scripts": {
     "build": "npx tsc",
     "lint": "eslint ./src --ext .ts",
-    "jasmine": "jasmine",
-    "test": "npm run lint && npm run build && npm run jasmine",
-    "start": "npm test && nodemon src"
+    "lint:fix":"eslint ./src --ext .ts --fix",
+    "test": "npm run build && jasmine",
+    "dev": "nodemon src",
+    "start": "npx tsc && node dist"
   },
   "repository": {
     "type": "git",

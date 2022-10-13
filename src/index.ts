@@ -1,6 +1,6 @@
 import express from 'express';
 import path from 'path';
-import * as imagesRoute from './routes/api/image';
+import * as imagesRoute from './api/routes/image';
 
 global.publicRoot = path.resolve(__dirname, '..', 'public');
 
