@@ -1,18 +1,16 @@
 import fs from 'fs';
 import path from 'path';
 import sharp from 'sharp';
+import ErrorService from '../errors/errorService';
 
 export default class ImageService {
   // eslint-disable-next-line @typescript-eslint/typedef
-  getImage = async (
+  static getImage = async (
     filename: string,
     width?: number,
     height?: number,
-  ): Promise<{ [imageUrl: string]: string | null }> => {
-    const result: { [imageUrl: string]: string | null } = {
-      imageUrl: null,
-      error: null,
-    };
+  ): Promise<string> => {
+    let result: string;
 
     const fileUrl = path.resolve(
       global.publicRoot,
@@ -21,17 +19,26 @@ export default class ImageService {
     );
 
     if (!fs.existsSync(fileUrl)) {
-      result.error = 'image does not exist';
-      return result;
+      throw ErrorService.fileNotFound(`File name ${filename} not found`);
     }
 
-    result.imageUrl = fileUrl;
+    result = fileUrl;
 
     let imageWidth: number;
     let imageHeight: number;
     let thumbFilepath: string;
 
-    if (width || height) {
+    if (width !== undefined || height !== undefined) {
+      if (
+        // eslint-disable-next-line operator-linebreak
+        (width !== undefined && width <= 0) ||
+        (height !== undefined && height <= 0)
+      ) {
+        throw ErrorService.invalidInput(
+          'Width or height must be larger than 0',
+        );
+      }
+
       imageWidth = width || (await sharp(fileUrl).metadata()).width!;
       imageHeight = height || (await sharp(fileUrl).metadata()).height!;
 
@@ -54,7 +61,7 @@ export default class ImageService {
           .toFile(thumbFilepath);
       }
 
-      result.imageUrl = thumbFilepath;
+      result = thumbFilepath;
     }
     return result;
   };

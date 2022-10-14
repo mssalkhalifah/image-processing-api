@@ -1,4 +1,5 @@
-import express from 'express';
+import express, { NextFunction } from 'express';
+import ApiError from '../../errors/errorApi';
 import ImageService from '../../services/imageService';
 
 type QueryParams = {
@@ -14,20 +15,44 @@ router.get(
   async (
     req: express.Request<{}, {}, {}, QueryParams>,
     res: express.Response,
+    next: NextFunction,
   ): Promise<void> => {
     if (!req.query.filename) {
-      res.status(400).send({ message: 'Must atleast include a filename' });
-    } else {
-      const result = await new ImageService().getImage(
-        req.query.filename,
-        parseInt(req.query.width, 10),
-        parseInt(req.query.height, 10),
+      next(
+        ApiError.missingParameter('Must atleast include filename paramater.'),
       );
+    } else {
+      try {
+        let width: number | undefined;
+        let height: number | undefined;
 
-      if (!result.imageUrl) {
-        res.status(404).send(result.error);
-      } else {
-        res.status(200).sendFile(result.imageUrl);
+        if (req.query.width) {
+          width = parseInt(req.query.width, 10);
+        }
+
+        if (req.query.height) {
+          height = parseInt(req.query.height, 10);
+        }
+
+        if (
+          // eslint-disable-next-line operator-linebreak
+          (req.query.width && Number.isNaN(width)) ||
+          (req.query.height && Number.isNaN(height))
+        ) {
+          throw ApiError.invalidParameterType(
+            'Width and height must be a number',
+          );
+        }
+
+        const result = await ImageService.getImage(
+          req.query.filename,
+          width,
+          height,
+        );
+
+        res.status(200).sendFile(result);
+      } catch (error) {
+        next(error);
       }
     }
   },
