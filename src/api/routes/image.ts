@@ -1,6 +1,7 @@
 import express, { NextFunction } from 'express';
 import ApiError from '../../errors/errorApi';
 import ImageService from '../../services/imageService';
+import { isInteger } from '../../utils/mathUtil';
 
 type QueryParams = {
   filename: string;
@@ -36,11 +37,11 @@ router.get(
 
         if (
           // eslint-disable-next-line operator-linebreak
-          (req.query.width && Number.isNaN(width)) ||
-          (req.query.height && Number.isNaN(height))
+          (req.query.width && !isInteger(req.query.width)) ||
+          (req.query.height && !isInteger(req.query.height))
         ) {
           throw ApiError.invalidParameterType(
-            'Width and height must be a number',
+            'Width and height must be integer',
           );
         }
 
