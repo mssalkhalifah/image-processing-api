@@ -12,16 +12,26 @@ $ npm install
 npm run build
 ```
 This will compile the typescript code and place it in ./dist
+#### Linting
+```
+npm run lint
+```
+Will run eslint in src folder.
+#### Dev
+```
+npm run dev
+```
+This will run nodemon for development.
 #### Test
 ```
 npm test
 ```
-This will run eslint first for any linting error. After that, build it then run jasmine for unit testing.
+Run jasmine for unit testing.
 #### Start
 ```
 npm start
 ```
-Will build, unit test and then run nodemon to start the server.
+Will build and run node.
 ## Api query
 `/api/image?filename=Name[&width=ImageWidth][&height=ImageHeight]`
 |Parameters|Description|
