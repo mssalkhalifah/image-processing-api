@@ -5,6 +5,7 @@
   "main": "./build/index.js",
   "scripts": {
     "build": "npx tsc",
+    "prettier": "prettier --write .",
     "lint": "eslint ./src --ext .ts",
     "lint:fix":"eslint ./src --ext .ts --fix",
     "test": "npm run build && jasmine",
